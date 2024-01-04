@@ -13,7 +13,7 @@ namespace FragileDishes
 
         private void Start()
         {
-            GetExplosionComponents();
+            GetFragileComponents();
             StartCoroutine(ExplosionCor(explosionDelay));
         }
 
@@ -35,7 +35,7 @@ namespace FragileDishes
 
         }
 
-        private void GetExplosionComponents()
+        private void GetFragileComponents()
         {
             foreach (Transform child in fragileDishesContainer)
             {
