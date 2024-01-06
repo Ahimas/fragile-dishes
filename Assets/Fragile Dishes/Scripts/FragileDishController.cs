@@ -8,6 +8,7 @@ namespace FragileDishes
     {
         [SerializeField] private Transform fragileDishesContainer;
         [SerializeField] private float explosionDelay;
+        [SerializeField] private AudioController audioController;
 
         private List<FragileDish> _fragileDishes = new();
 
@@ -25,10 +26,11 @@ namespace FragileDishes
 
             foreach (var dish in _fragileDishes)
             {
-                float power = Random.Range(50f, 550f);
+                float power = Random.Range(150f, 450f);
                 float upwardModifier = Random.Range(0.00025f, 0.0008f);
 
                 dish.Blow(power, upwardModifier);
+                audioController.PlayBrokenGlassSound();
 
                 yield return waiter;
             }
