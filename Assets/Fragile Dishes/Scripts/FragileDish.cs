@@ -8,8 +8,8 @@ namespace FragileDishes
     [Serializable]
     public class FragileDish : MonoBehaviour
     {
-        private GameObject _fullObject;
-        private Transform _cells;
+        private GameObject _solidObject;
+        private Transform _fragmentsContainer;
         private Vector3 _explosionPos;
         private float _delay = 5f;
 
@@ -20,10 +20,10 @@ namespace FragileDishes
 
         public void Blow(float power, float upwardsModifier)
         {
-            _fullObject.SetActive(false);
-            _cells.gameObject.SetActive(true);
+            _solidObject.SetActive(false);
+            _fragmentsContainer.gameObject.SetActive(true);
 
-            foreach (Transform child in _cells)
+            foreach (Transform child in _fragmentsContainer)
             {
                 var rb = child.AddComponent<Rigidbody>();
                 var cl = child.AddComponent<BoxCollider>();
@@ -42,8 +42,15 @@ namespace FragileDishes
 
             foreach (Transform child in this.transform)
             {
-                if (child.name.Equals("FULL")) _fullObject = child.gameObject;
-                if (child.name.Equals("CELLS")) _cells = child;
+                switch (child.name)
+                {
+                    case "Solid":
+                        _solidObject = child.gameObject;
+                        break;
+                    case "FragmentsContainer":
+                        _fragmentsContainer = child;
+                        break;
+                }
             }
         }
     }
