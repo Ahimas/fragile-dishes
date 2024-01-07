@@ -4,9 +4,11 @@ using UnityEngine;
 
 namespace FragileDishes
 {
+    /// <summary>
+    /// Controls the automatic explosion of each FragileDish contained into its internal list. 
+    /// </summary>
     public class FragileDishController : MonoBehaviour
     {
-        [SerializeField] private Transform fragileDishesContainer;
         [SerializeField] private float explosionDelay;
         [SerializeField] private AudioController audioController;
 
@@ -14,14 +16,29 @@ namespace FragileDishes
 
         private void Start()
         {
-            GetFragileComponents();
-            StartCoroutine(ExplosionCor(explosionDelay));
+            //StartCoroutine(ExplosionCor(explosionDelay));
         }
 
+        /// <summary>
+        /// Adds the FragileDish object to its internal list for further explosions.
+        /// </summary>
+        /// <param name="fragileDish"></param>
+        public void AddFragileDish(FragileDish fragileDish)
+        {
+            _fragileDishes.Add(fragileDish);
+        }
+        
+        /// <summary>
+        /// Invoke the FragileDish explosions with random force.
+        /// </summary>
+        /// <param name="delay">Pause between explosions.</param>
+        /// <returns></returns>
         private IEnumerator ExplosionCor(float delay)
         {
             yield return new WaitForSeconds(1f);
 
+            RandomizeListOrder();
+            
             WaitForSeconds waiter = new WaitForSeconds(delay);
 
             foreach (var dish in _fragileDishes)
@@ -34,16 +51,23 @@ namespace FragileDishes
 
                 yield return waiter;
             }
-
         }
 
-        private void GetFragileComponents()
+        /// <summary>
+        /// Randomly mix the list content order.
+        /// </summary>
+        private void RandomizeListOrder()
         {
-            foreach (Transform child in fragileDishesContainer)
+            int n = _fragileDishes.Count;
+            int limit = n - 1;
+            
+            while (n > 1)
             {
-                _fragileDishes.Add(child.GetComponent<FragileDish>());
+                n--;
+                int k = Random.Range(0, limit);
+
+                (_fragileDishes[k], _fragileDishes[n]) = (_fragileDishes[n], _fragileDishes[k]);
             }
         }
-
     }
 }

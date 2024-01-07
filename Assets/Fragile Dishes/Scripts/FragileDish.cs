@@ -1,23 +1,28 @@
-using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
 namespace FragileDishes
 {
-
-    [Serializable]
+    /// <summary>
+    /// FragileDish — the core class that blows up the prepared models.
+    /// </summary>
     public class FragileDish : MonoBehaviour
     {
         private GameObject _solidObject;
         private Transform _fragmentsContainer;
         private Vector3 _explosionPos;
-        private float _delay = 5f;
+        private static float _delay = 5f;
 
         private void Start()
         {
             InitVariables();
         }
 
+        /// <summary>
+        /// Blows up the prepared model with given powers.
+        /// </summary>
+        /// <param name="power"></param>
+        /// <param name="upwardsModifier"></param>
         public void Blow(float power, float upwardsModifier)
         {
             _solidObject.SetActive(false);
