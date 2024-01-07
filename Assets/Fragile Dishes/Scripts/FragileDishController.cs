@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace FragileDishes
 {
@@ -9,14 +10,16 @@ namespace FragileDishes
     /// </summary>
     public class FragileDishController : MonoBehaviour
     {
+        [SerializeField] private CameraMovementController cameraController;
         [SerializeField] private float explosionDelay;
         [SerializeField] private AudioController audioController;
+        [SerializeField] private Button startButton;
 
         private List<FragileDish> _fragileDishes = new();
 
         private void Start()
         {
-            //StartCoroutine(ExplosionCor(explosionDelay));
+            startButton.onClick.AddListener(StartExplosions);
         }
 
         /// <summary>
@@ -26,6 +29,14 @@ namespace FragileDishes
         public void AddFragileDish(FragileDish fragileDish)
         {
             _fragileDishes.Add(fragileDish);
+        }
+
+        /// <summary>
+        /// Starts the explosions.
+        /// </summary>
+        private void StartExplosions()
+        {
+            StartCoroutine(ExplosionCor(explosionDelay));
         }
         
         /// <summary>
@@ -39,17 +50,22 @@ namespace FragileDishes
 
             RandomizeListOrder();
             
-            WaitForSeconds waiter = new WaitForSeconds(delay);
+            WaitForSeconds rotateWaiter = new WaitForSeconds(delay + 0.5f);
+            WaitForSeconds delayWaiter = new WaitForSeconds(delay);
 
             foreach (var dish in _fragileDishes)
             {
                 float power = Random.Range(150f, 450f);
                 float upwardModifier = Random.Range(0.00025f, 0.0008f);
-
+                
+                cameraController.RotateToBlow(dish.transform, delay);
+                
+                yield return rotateWaiter;
+                
                 dish.Blow(power, upwardModifier);
                 audioController.PlayBrokenGlassSound();
-
-                yield return waiter;
+                
+                yield return delayWaiter;
             }
         }
 
