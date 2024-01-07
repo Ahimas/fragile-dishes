@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,12 +10,15 @@ namespace FragileDishes
         [SerializeField] private float moveSpeed;
         [SerializeField] private Transform lookPoint;
         [SerializeField] private List<Transform> cameraPoints = new List<Transform>();
-
+        
         private bool _isMoving;
+        
+        private int _nextPositionIndex;
+        private int _startCameraPositionIndex = 0;
 
         private void Start()
         {
-            StartCoroutine(CameraMovementCoroutine());
+            InitMoving();
         }
 
         private void LateUpdate()
@@ -22,23 +26,15 @@ namespace FragileDishes
             this.transform.LookAt(lookPoint);
         }
 
-        private IEnumerator CameraMovementCoroutine()
+        private void InitMoving()
         {
-            int nextPositionIndex = 1;
-
-            this.transform.position = cameraPoints[0].position;
+            _startCameraPositionIndex = Math.Clamp(_startCameraPositionIndex, 0, cameraPoints.Count - 1);
+            this.transform.position = cameraPoints[_startCameraPositionIndex].position;
+            _nextPositionIndex = _startCameraPositionIndex + 1;
             
-            while (true)
-            {
-                if (_isMoving) continue;
-                
-                _isMoving = true;
-                
-                MoveToPosition(cameraPoints[nextPositionIndex].position);
-                nextPositionIndex++;
-
-                if (nextPositionIndex == cameraPoints.Count) nextPositionIndex = 0;
-            }
+            if (_nextPositionIndex == cameraPoints.Count) _nextPositionIndex = 0;
+            
+            MoveToPosition(cameraPoints[_nextPositionIndex].position);
         }
         
         private void MoveToPosition(Vector3 targetPosition)
@@ -66,7 +62,12 @@ namespace FragileDishes
             }
             
             transform.position = end;
-            _isMoving = false;
+            
+            _nextPositionIndex++;
+            if (_nextPositionIndex == cameraPoints.Count) _nextPositionIndex = 0;
+            
+            MoveToPosition(cameraPoints[_nextPositionIndex].position);
+            
         }
         
     }

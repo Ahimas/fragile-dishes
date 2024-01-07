@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0e8084284924f34c80f86935dfe3bce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 2.5
   lookPoint: {fileID: 1541799236}
   cameraPoints:
   - {fileID: 1541799240}
